@@ -32,22 +32,24 @@ class LinearRegressor:
 
         Returns:
             None: Modifies the model's coefficients and intercept in-place.
+            
         """
-        X=np.array(X)
-        y=np.array(y)
-        
         X=X.reshape(-1,1)
         y=y.reshape(-1,1)
         
-        X_mean=np.mean(X)
-        y_mean=np.mean(y)
+        X_mean = np.mean(X)
+        y_mean = np.mean(y)
+
+        # Calculamos el numerador y denominador para el coeficiente (pendiente)
+        numerador = np.sum((X - X_mean) * (y - y_mean))
+        denominador = np.sum((X - X_mean) ** 2)
+
+        # Cálculo de los coeficientes
+        self.coefficients = numerador / denominador
+
+        # Cálculo del intercepto
+        self.intercept = y_mean - self.coefficients * X_mean
         
-        numerador=np.sum((X-X_mean)*(y-y_mean))
-        denominador=np.sum((X-X_mean)**2)
-        
-        
-        self.coefficients=numerador/denominador
-        self.intercept=y_mean-self.coefficients*X_mean
         
         
         
@@ -108,12 +110,11 @@ class LinearRegressor:
 
         if np.ndim(X) == 1 or X.shape[1] <2:
             # TODO: Predict when X is only one variable
-            print("entra aqui en el if 1 ")
-            X=X.reshape(1,-1)
             
+            X=X.reshape(1,-1)
             predictions = self.intercept + np.dot(X, self.coefficients)
-            #predictions=predictions.reshape(-1,1)
-            predictions = predictions.flatten()
+            predictions=predictions.reshape(-1,)
+            
 
             
         else:
